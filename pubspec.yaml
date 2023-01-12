@@ -1,0 +1,88 @@
+name: courier_market_mobile
+description: Mobile Application for the Courier Market Service
+
+version: 2.0.0+31
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  #Core
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  auto_route: ^1.0.0
+  background_locator: 1.5.0+1
+  built_collection: ^5.0.0
+  built_value: ^8.0.0
+  crypto: ^3.0.0
+  cupertino_icons: ^0.1.2
+  device_info: ^0.4.2
+  firebase_analytics: ^6.0.0
+  firebase_core: ^0.5.0
+  firebase_crashlytics: ^0.1.3
+  firebase_messaging: ^7.0.0
+  firebase_performance: ^0.4.0
+  firebase_remote_config: ^0.4.0
+  flutter_google_places: ^0.2.8
+  flutter_launcher_icons: ^0.9.0
+  flutter_native_splash: ^1.1.0
+  fluttertoast: ^7.0.0
+  font_awesome_flutter: ^8.8.1
+  geolocator: ^6.0.0
+  get_it: ^6.0.0
+  google_maps_flutter: ^0.5.28
+  google_maps_webservice: ^0.0.16 # Error in 0.0.16 - https://github.com/lejard-h/google_maps_webservice/issues/75
+  image_picker: ^0.6.7
+  injectable: ^1.2.0
+  listview_utils: ^0.2.0
+  location: ^3.0.2
+  location_permissions: ^3.0.0
+  logging: ^1.0.0
+  oauth2: ^1.5.0
+  package_info: ">=0.4.0 <2.0.0"
+  path_provider: ^1.6.5
+  provider: ^4.0.0
+  shared_preferences: ^0.5.7
+  url_launcher: ^5.4.5
+  uuid: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  auto_route_generator: ^1.0.0
+  build_runner: ^1.8.0
+  built_value_generator: ^8.0.0
+  injectable_generator: ^1.2.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/icons/logo.png
+    - assets/icons/map/driver.png
+    - assets/icons/map/driver@2x.png
+    - assets/icons/map/driver@3x.png
+    - assets/icons/map/dropoff.png
+    - assets/icons/map/dropoff@2x.png
+    - assets/icons/map/dropoff@3x.png
+    - assets/icons/map/pickup.png
+    - assets/icons/map/pickup@2x.png
+    - assets/icons/map/pickup@3x.png
+
+# flutter pub run flutter_launcher_icons:main
+flutter_icons:
+  android: true
+  ios: true
+  image_path: assets/icons/icon.png
+  adaptive_icon_foreground: assets/icons/icon-fg.png
+  adaptive_icon_background: "#035b7f"
+
+# flutter pub run flutter_native_splash:create
+flutter_native_splash:
+  android: true
+  ios: true
+  color: "#ffffff"
+  image: assets/icons/logo.png
+  android_disable_fullscreen: true

@@ -1,0 +1,13 @@
+targets:
+  $default:
+    builders:
+      built_value_generator|built_value:
+        generate_for:
+          - lib/built_value/*.dart
+          - lib/built_value/**/*.dart
+      auto_route_generator:autoRouteGenerator:
+        generate_for:
+          - lib/router/*.dart
+      injectable_generator:injectable_builder:
+        generate_for:
+          - lib/api/*.dart

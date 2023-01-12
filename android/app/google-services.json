@@ -1,0 +1,72 @@
+{
+  "project_info": {
+    "project_number": "932820896853",
+    "firebase_url": "https://courier-market.firebaseio.com",
+    "project_id": "courier-market",
+    "storage_bucket": "courier-market.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932820896853:android:05663ef71e31fafb",
+        "android_client_info": {
+          "package_name": "test.appcourier"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "932820896853-to8lsr0n77m800d1iunntd5insgjf5ae.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "test.appcourier",
+            "certificate_hash": "d210d5457505cbb65b0b7b46cb074d24a93648bf"
+          }
+        },
+        {
+          "client_id": "932820896853-ul3avgtgd66a87r282f0t3p6chjq6aeg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "test.appcourier",
+            "certificate_hash": "0e50befece702a5048c47d029b83a929ac4cc1ba"
+          }
+        },
+        {
+          "client_id": "932820896853-ccl4rai44690ujbhoeeuvtalaurulp5p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "test.appcourier",
+            "certificate_hash": "cd4dc398fe30cabafd1b16b65204e8cdb63a3549"
+          }
+        },
+        {
+          "client_id": "932820896853-ok5s7o3en4jdafifjpu0v7ua3avk448r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6r4AWCId-TTATpKWUHzwm05-rXXeZv5M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932820896853-ok5s7o3en4jdafifjpu0v7ua3avk448r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "932820896853-sgkcsj3ur8gb8lfsle4to2umsrskav15.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "personal.CourierMarket",
+                "app_store_id": "1339177381"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
