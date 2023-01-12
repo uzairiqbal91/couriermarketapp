@@ -112,7 +112,8 @@ class Auth {
         Uri.parse("${_cfg.apiUrl}/../oauth/token"), username, password,
         identifier: this._cfg.apiClientId,
         secret: this._cfg.apiClientSecret,
-        onCredentialsRefreshed: _onCredentialRefresh);
+        onCredentialsRefreshed: _onCredentialRefresh
+    );
     _authCache.creds = _client.credentials;
     client.value = JsonClient(httpClient: _client);
     log.info("getting user");

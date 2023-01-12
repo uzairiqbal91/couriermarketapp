@@ -37,7 +37,7 @@ class AppDrawer extends StatelessWidget {
                   onChanged: (bool value) async {
                     if (value == true) return await getIt<Bookings>().setIsOnline(true);
                     var result = await _confirmOffline(context);
-                    if (result != null) await getIt<Bookings>().setIsOnline(false);
+                    if (result != false) await getIt<Bookings>().setIsOnline(false);
                   },
                   secondary: value == LocationTrackingLevel.NONE ? Icon(Icons.location_off) : Icon(Icons.location_on),
                   title: Text(value == LocationTrackingLevel.NONE ? "Offline" : "Online"),

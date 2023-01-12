@@ -75,7 +75,7 @@ class Bookings extends ApiClientBase {
     await this.location.syncWithDesiredAccuracy();
   }
 
-  Future setIsOnline(bool state) async {
+  Future  setIsOnline(bool state) async {
     if (state && this.location.trackingLevel.value == LocationTrackingLevel.NONE) await this.location.startLocator();
     if (!state && this.location.trackingLevel.value != LocationTrackingLevel.NONE) await this.location.stopLocator();
   }
