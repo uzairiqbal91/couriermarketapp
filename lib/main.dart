@@ -16,6 +16,8 @@ import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
+import 'api/versions.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ensureDependencies();
@@ -25,6 +27,8 @@ Future<void> main() async {
   Logger.root.onRecord.listen((record) {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
+
+
 
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   FirebaseAnalytics().setAnalyticsCollectionEnabled(buildConfig.env == Env.PRODUCTION);

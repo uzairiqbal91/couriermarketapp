@@ -1,16 +1,20 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:courier_market_mobile/api/auth.dart';
 import 'package:courier_market_mobile/api/bookings.dart';
+import 'package:courier_market_mobile/api/build_config.dart';
 import 'package:courier_market_mobile/api/container.dart';
 import 'package:courier_market_mobile/api/data_dictionary.dart';
 import 'package:courier_market_mobile/api/listings.dart';
+import 'package:courier_market_mobile/api/versions.dart';
 import 'package:courier_market_mobile/built_value/enums/feedback_type.dart';
 import 'package:courier_market_mobile/built_value/enums/listing_state.dart';
 import 'package:courier_market_mobile/built_value/models/auth_user.dart';
 import 'package:courier_market_mobile/built_value/models/feedback.dart';
 import 'package:courier_market_mobile/built_value/models/listing.dart';
+import 'package:courier_market_mobile/built_value/models/versions.dart';
 import 'package:courier_market_mobile/fragments/ListingDetails/section_contact_information.dart';
 import 'package:courier_market_mobile/fragments/ListingDetails/section_driver_assign.dart';
 import 'package:courier_market_mobile/fragments/ListingDetails/section_place_bid.dart';
@@ -22,10 +26,13 @@ import 'package:courier_market_mobile/fragments/feedback_item.dart';
 import 'package:courier_market_mobile/fragments/label_set.dart';
 import 'package:courier_market_mobile/fragments/section.dart';
 import 'package:courier_market_mobile/router/router.gr.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide Feedback;
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
 class ListingDetailScreen extends StatelessWidget {
   static const activeRoute = ListingDetailScreenRoute.name;
   final int? listing;
@@ -69,9 +76,11 @@ class _ListingDetailState extends State<ListingDetail> {
   late Future<Listing?> load;
   bool _isLoading = true;
   late Listings listingClient;
+
   Listing? _listing;
   Exception? _error;
   AuthUser? user;
+
 
   bool? get isOwner => _listing?.isOwnedBy(user!.group);
 
@@ -91,6 +100,9 @@ class _ListingDetailState extends State<ListingDetail> {
           .whenComplete(() {
         if (mounted) setState(() => _isLoading = false);
       });
+
+
+
 
   @override
   Widget build(BuildContext context) => _listing == null
@@ -441,4 +453,9 @@ class _ListingDetailState extends State<ListingDetail> {
       Navigator.pop(context);
     });
   }
+
+
+
 }
+
+
