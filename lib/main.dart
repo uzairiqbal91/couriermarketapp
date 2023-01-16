@@ -16,12 +16,14 @@ import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
+import 'api/prefs.dart';
 import 'api/versions.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await ensureDependencies();
   final buildConfig = getIt<BuildConfig>();
+
 
   Logger.root.level = Foundation.kReleaseMode ? Level.INFO : Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
@@ -60,6 +62,7 @@ class _ApplicationState extends State<Application> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final _appRouter = getIt<Router>();
 
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -68,6 +71,11 @@ class _ApplicationState extends State<Application> {
       onResume: _notificationHandler,
       onMessage: (Map<String, dynamic> message) async => print("onMessage: $message"),
     );
+
+    // fcm token - creating and saving in preferences
+    _firebaseMessaging.getToken().then((value) {
+      getIt<Prefs>().setfcmToken(value);
+    });
   }
 
   Future<dynamic> _notificationHandler(Map<String, dynamic> message) async {

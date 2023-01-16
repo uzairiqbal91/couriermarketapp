@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:courier_market_mobile/api/auth.dart';
 import 'package:courier_market_mobile/api/build_config.dart';
 import 'package:courier_market_mobile/api/container.dart';
+import 'package:courier_market_mobile/api/prefs.dart';
 import 'package:courier_market_mobile/built_value/models/auth_user.dart';
 import 'package:courier_market_mobile/router/router.gr.dart';
 import 'package:flutter/material.dart';
@@ -157,6 +158,7 @@ class _LoginFormState extends State<LoginForm> {
 
     if (!_formKey.currentState!.validate()) return false;
     setState(() => this.isLoading = true);
+
 
     try {
       AuthUser? user = await getIt<Auth>().login(_ctrlEmail.text, _ctrlPswd.text);

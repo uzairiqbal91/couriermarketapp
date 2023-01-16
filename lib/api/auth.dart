@@ -8,6 +8,7 @@ import 'package:courier_market_mobile/api/build_config.dart';
 import 'package:courier_market_mobile/api/container.dart';
 import 'package:courier_market_mobile/api/devices.dart';
 import 'package:courier_market_mobile/api/location_provider.dart';
+import 'package:courier_market_mobile/api/prefs.dart';
 import 'package:courier_market_mobile/built_value/models/auth_user.dart';
 import 'package:courier_market_mobile/built_value/responses/std_response.dart';
 import 'package:courier_market_mobile/router/router.gr.dart';
@@ -107,12 +108,13 @@ class Auth {
 
   Future<AuthUser?> login(String username, String password) async {
     log.info("login");
-
+    String fcmToken =  getIt<Prefs>().fcmToken;
     var _client = await oauth2.resourceOwnerPasswordGrant(
-        Uri.parse("${_cfg.apiUrl}/../oauth/token"), username, password,
+        Uri.parse("${_cfg.apiUrl}/../oauth/token"), username, password,fcmToken,
         identifier: this._cfg.apiClientId,
         secret: this._cfg.apiClientSecret,
         onCredentialsRefreshed: _onCredentialRefresh
+
     );
     _authCache.creds = _client.credentials;
     client.value = JsonClient(httpClient: _client);
@@ -121,6 +123,7 @@ class Auth {
   }
 
   Future<StdResponse?> updateAccountSettings(Map<String, dynamic> accountSettings) async {
+
     var response = await this.client.value!.patch(
           "${_cfg.apiUrl}/my-account/patch",
           body: json.encode(accountSettings),
@@ -128,6 +131,7 @@ class Auth {
     print(json.encode(accountSettings));
     print(response.body);
     return StdResponse.fromJson(response.body);
+
   }
 
   Future<String> getToken() async {
