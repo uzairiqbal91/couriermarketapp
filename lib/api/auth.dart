@@ -108,9 +108,8 @@ class Auth {
 
   Future<AuthUser?> login(String username, String password) async {
     log.info("login");
-    String fcmToken =  getIt<Prefs>().fcmToken;
     var _client = await oauth2.resourceOwnerPasswordGrant(
-        Uri.parse("${_cfg.apiUrl}/../oauth/token"), username, password,fcmToken,
+        Uri.parse("${_cfg.apiUrl}/../oauth/token"), username, password,
         identifier: this._cfg.apiClientId,
         secret: this._cfg.apiClientSecret,
         onCredentialsRefreshed: _onCredentialRefresh

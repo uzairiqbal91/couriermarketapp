@@ -73,9 +73,9 @@ class _ApplicationState extends State<Application> {
     );
 
     // fcm token - creating and saving in preferences
-    _firebaseMessaging.getToken().then((value) {
-      getIt<Prefs>().setfcmToken(value);
-    });
+    // _firebaseMessaging.getToken().then((value) {
+    //   getIt<Prefs>().setfcmToken(value);
+    // });
   }
 
   Future<dynamic> _notificationHandler(Map<String, dynamic> message) async {

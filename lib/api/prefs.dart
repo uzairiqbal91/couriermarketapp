@@ -36,8 +36,9 @@ class Prefs {
 
   Future<bool> setDeviceLocate(bool value) => prefs.setBool(_k('device.locate'), value);
 
-  String get fcmToken => prefs.getString(_k('fcm.token')) ?? "";
-  Future<bool> setfcmToken(String value) => prefs.setString(_k('fcm.token'), value);
+  // setting and getting fcm token in preferences
+  // String get fcmToken => prefs.getString(_k('fcm.token')) ?? "";
+  // Future<bool> setfcmToken(String value) => prefs.setString(_k('fcm.token'), value);
 
   ///---- Jobs ----
 

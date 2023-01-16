@@ -48,6 +48,7 @@ class LocationProvider {
 
     await BackgroundLocator.initialize();
     await BackgroundLocator.registerLocationUpdate(
+
       LocationProviderHandler.callback,
       androidSettings: AndroidSettings(
         accuracy: common['accuracy'] as LocationAccuracy,
