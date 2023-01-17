@@ -97,6 +97,7 @@ class Devices extends ApiClientBase with ChangeNotifier {
               'lng': location.longitude,
             }
           }),
+
         );
 
     return true;

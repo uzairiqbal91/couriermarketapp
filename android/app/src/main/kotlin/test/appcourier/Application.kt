@@ -12,7 +12,7 @@ import rekab.app.background_locator.IsolateHolderService
 class Application : FlutterApplication(), PluginRegistry.PluginRegistrantCallback {
     override fun onCreate() {
         super.onCreate()
-        IsolateHolderService.setPluginRegistrant(this)
+//        IsolateHolderService.setPluginRegistrant(this)
         FlutterMain.startInitialization(this)
     }
 

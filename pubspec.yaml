@@ -13,7 +13,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   auto_route: ^1.0.0
-  background_locator: 1.5.0+1
+  background_locator: ^1.6.12
   built_collection: ^5.0.0
   built_value: ^8.0.0
   crypto: ^3.0.0
