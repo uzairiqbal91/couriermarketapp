@@ -54,12 +54,12 @@ class LocationProvider {
 
       LocationProviderHandler.callback,
       androidSettings: AndroidSettings(
-        // accuracy: common['accuracy'] as LocationAccuracy,
-        // interval: common['interval'] as int,
-        accuracy: LocationAccuracy.NAVIGATION,
-        interval: 5,
-        distanceFilter: 0,
-        client: LocationClient.google,
+        accuracy: common['accuracy'] as LocationAccuracy,
+        interval: common['interval'] as int,
+        // accuracy: LocationAccuracy.NAVIGATION,
+        // interval: 5,
+        // distanceFilter: 0,
+        // client: LocationClient.google,
         androidNotificationSettings: AndroidNotificationSettings(
           notificationTitle: "Courier Market",
           notificationMsg:
@@ -71,10 +71,10 @@ class LocationProvider {
         ),
       ),
       iosSettings: IOSSettings(
-        // accuracy: common['accuracy'] as LocationAccuracy,
-        // distanceFilter: 5,
-        accuracy: LocationAccuracy.NAVIGATION,
-          distanceFilter: 0
+        accuracy: common['accuracy'] as LocationAccuracy,
+        distanceFilter: 5,
+        // accuracy: LocationAccuracy.NAVIGATION,
+        //   distanceFilter: 0
       ),
       autoStop: false,
     );
@@ -108,9 +108,9 @@ class LocationProviderHandler {
   static Future<void> callback(LocationDto locationDto) async {
     print("-- BACKGROUND LOCATION --");
 
-    // await ensureDependencies(true);
-    Fluttertoast.showToast(msg: "Latitude: ${locationDto.latitude.toString()} ${locationDto.longitude.toString()}", toastLength: Toast.LENGTH_LONG);
-    // getIt<Devices>().heartbeat(DeviceLocation(locationDto.latitude, locationDto.longitude));
+    await ensureDependencies(true);
+    // Fluttertoast.showToast(msg: "Latitude: ${locationDto.latitude.toString()} ${locationDto.longitude.toString()}", toastLength: Toast.LENGTH_LONG);
+    getIt<Devices>().heartbeat(DeviceLocation(locationDto.latitude, locationDto.longitude));
 
   }
 }

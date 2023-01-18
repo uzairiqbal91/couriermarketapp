@@ -3,11 +3,14 @@ import 'package:courier_market_mobile/api/auth.dart';
 import 'package:courier_market_mobile/api/bookings.dart';
 import 'package:courier_market_mobile/api/container.dart';
 import 'package:courier_market_mobile/api/location_provider.dart';
+import 'package:courier_market_mobile/api/permissions.dart';
 import 'package:courier_market_mobile/api/prefs.dart';
 import 'package:courier_market_mobile/built_value/models/auth_user.dart';
 import 'package:courier_market_mobile/router/router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:location/location.dart';
+
 
 class AppDrawer extends StatelessWidget {
   final String? activeRoute;
@@ -35,7 +38,34 @@ class AppDrawer extends StatelessWidget {
                       builder: (BuildContext context, LocationTrackingLevel value, Widget? child) => SwitchListTile(
                   value: value != LocationTrackingLevel.NONE,
                   onChanged: (bool value) async {
-                    if (value == true) return await getIt<Bookings>().setIsOnline(true);
+                    if (value == true) {
+                        //
+                      final Location location = Location();
+                      var perms = await location.requestPermission();
+                      if (perms == PermissionStatus.granted){
+                        bool _bgModeEnabled = await location.isBackgroundModeEnabled();
+                        if (!_bgModeEnabled) {
+                          try {
+
+                            await location.enableBackgroundMode();
+                            return await getIt<Bookings>().setIsOnline(true);
+                          } catch (e) {
+                            debugPrint(e.toString());
+                          }
+                          try {
+                            _bgModeEnabled = await location.enableBackgroundMode();
+
+                          } catch (e) {
+                            debugPrint(e.toString());
+                          }
+                          print(_bgModeEnabled);
+                        }
+
+
+                      }
+                      location.isBackgroundModeEnabled();
+
+                    }
                     var result = await _confirmOffline(context);
                     if (result != false) await getIt<Bookings>().setIsOnline(false);
                   },
@@ -165,6 +195,7 @@ class AppDrawer extends StatelessWidget {
       ),
     );
   }
+
 }
 
 class _GotoListTile extends StatelessWidget {
