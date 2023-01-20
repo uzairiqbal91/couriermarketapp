@@ -1,3 +1,6 @@
+import 'dart:io';
+
+
 import 'package:auto_route/auto_route.dart';
 import 'package:courier_market_mobile/api/auth.dart';
 import 'package:courier_market_mobile/api/bookings.dart';
@@ -7,9 +10,11 @@ import 'package:courier_market_mobile/api/permissions.dart';
 import 'package:courier_market_mobile/api/prefs.dart';
 import 'package:courier_market_mobile/built_value/models/auth_user.dart';
 import 'package:courier_market_mobile/router/router.gr.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 
 class AppDrawer extends StatelessWidget {
@@ -40,34 +45,16 @@ class AppDrawer extends StatelessWidget {
                   onChanged: (bool value) async {
                     if (value == true) {
                         //
-                      final Location location = Location();
-                      var perms = await location.requestPermission();
-                      if (perms == PermissionStatus.granted){
-                        bool _bgModeEnabled = await location.isBackgroundModeEnabled();
-                        if (!_bgModeEnabled) {
-                          try {
+                      _checkPermission(context);
 
-                            await location.enableBackgroundMode();
-                            return await getIt<Bookings>().setIsOnline(true);
-                          } catch (e) {
-                            debugPrint(e.toString());
-                          }
-                          try {
-                            _bgModeEnabled = await location.enableBackgroundMode();
-
-                          } catch (e) {
-                            debugPrint(e.toString());
-                          }
-                          print(_bgModeEnabled);
-                        }
-
-
-                      }
-                      location.isBackgroundModeEnabled();
 
                     }
-                    var result = await _confirmOffline(context);
-                    if (result != false) await getIt<Bookings>().setIsOnline(false);
+                    else
+                      {
+                        var result = await _confirmOffline(context);
+                        if (result != false) await getIt<Bookings>().setIsOnline(false);
+                      }
+
                   },
                   secondary: value == LocationTrackingLevel.NONE ? Icon(Icons.location_off) : Icon(Icons.location_on),
                   title: Text(value == LocationTrackingLevel.NONE ? "Offline" : "Online"),
@@ -193,6 +180,117 @@ class AppDrawer extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+
+  Future<bool> _checkPermission(BuildContext context) async {
+    var alwaysPermission = await Permission.locationAlways.status;
+    var boolIsAlways =  await Permission.locationAlways.isGranted;
+
+    // We first need to request locationWhenInUse, because it is required to request locationAlways
+
+      var whenInUsePermission = await Permission.locationWhenInUse.status;
+
+        whenInUsePermission = await Permission.locationWhenInUse.request();
+        if(whenInUsePermission.isGranted == true){
+          if(alwaysPermission.isGranted == false ) {
+            showPermissionDialog(context:context , function: () async{
+
+
+              await Permission.locationAlways.request().then((status) {
+                print("permission checker" + status.isGranted.toString());
+                Permission.locationAlways.status.isGranted.then((value) {
+                  if(value){
+                    getIt<Bookings>().setIsOnline(true);
+                  }
+                });
+
+              });
+
+              // boolIsAlways  = alwaysPermission.isGranted;
+              // return alwaysPermission.isGranted;
+            });
+
+          }
+
+        }
+
+    return alwaysPermission.isGranted;
+
+  }
+
+  void showPermissionDialog({
+    required BuildContext context,
+    String dialogTitle = "Always Allow Permission",
+    String? dialogText,
+    String updateButtonText = "Go",
+    bool allowDismissal = false,
+    String dismissButtonText = "Cancel",
+    VoidCallback? dismissAction,
+    required VoidCallback function,
+  }) async {
+    final dialogTitleWidget = Text(dialogTitle);
+    final dialogTextWidget = Text(
+      dialogText ?? "Please go to app settings and allow always on location",
+    );
+
+    final updateButtonTextWidget = Text(updateButtonText);
+    final updateAction = () {
+      function();
+      Navigator.of(context, rootNavigator: true).pop();
+    };
+
+    List<Widget> actions = [];
+
+    final dismissButtonTextWidget = Text(dismissButtonText);
+    dismissAction = dismissAction ??
+            () {
+
+          Navigator.of(context, rootNavigator: true).pop();
+        };
+    actions.add(
+      Platform.isAndroid
+          ? TextButton(
+        child: dismissButtonTextWidget,
+        onPressed: dismissAction,
+      )
+          : CupertinoDialogAction(
+        child: dismissButtonTextWidget,
+        onPressed: dismissAction,
+      ),
+    );
+
+    actions.add(
+      Platform.isAndroid
+          ? TextButton(
+        child: updateButtonTextWidget,
+        onPressed: updateAction,
+      )
+          : CupertinoDialogAction(
+        child: updateButtonTextWidget,
+        onPressed: updateAction,
+      ),
+    );
+
+    await showDialog(
+      context: context,
+      barrierDismissible: allowDismissal,
+      builder: (BuildContext context) {
+        return WillPopScope(
+            child: Platform.isAndroid
+                ? AlertDialog(
+              title: dialogTitleWidget,
+              content: dialogTextWidget,
+              actions: actions,
+            )
+                : CupertinoAlertDialog(
+              title: dialogTitleWidget,
+              content: dialogTextWidget,
+              actions: actions,
+            ),
+            onWillPop: () => Future.value(allowDismissal));
+      },
     );
   }
 
