@@ -213,6 +213,10 @@ class AppDrawer extends StatelessWidget {
             });
 
           }
+          else
+            {
+              getIt<Bookings>().setIsOnline(true);
+            }
 
         }
 
