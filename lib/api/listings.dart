@@ -5,15 +5,22 @@ import 'package:courier_market_mobile/api/api_client.dart';
 import 'package:courier_market_mobile/api/api_client_base.dart';
 import 'package:courier_market_mobile/api/api_exception.dart';
 import 'package:courier_market_mobile/api/auth.dart';
+import 'package:courier_market_mobile/api/prefs.dart';
+import 'package:courier_market_mobile/built_value/enums/device_type.dart';
 import 'package:courier_market_mobile/built_value/models/bid.dart';
 import 'package:courier_market_mobile/built_value/models/group.dart';
 import 'package:courier_market_mobile/built_value/models/listing.dart';
 import 'package:courier_market_mobile/built_value/models/user.dart';
 import 'package:courier_market_mobile/built_value/responses/paginated_response.dart';
 import 'package:courier_market_mobile/built_value/responses/std_response.dart';
+import 'package:device_info/device_info.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 @Singleton(dependsOn: [ApiClient, Auth])
 class Listings extends ApiClientBase {
@@ -21,8 +28,9 @@ class Listings extends ApiClientBase {
   static const FILTER_SHOW_ONLY_ME = "showOnlyMe";
   static const FILTER_SHOW_LOCATION = "showLocation";
   static const FILTER_SHOW_PROGRESS = "showProgress";
-
-  Listings(ApiClient client) : super(client);
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+  Prefs prefs;
+  Listings(ApiClient client, this.prefs) : super(client);
 
   Future<PaginatedResponse<Listing>?> list({
     String filter = FILTER_SHOW_ALL,
@@ -39,6 +47,66 @@ class Listings extends ApiClientBase {
           },
         ));
     return PaginatedResponse.fromJson<Listing>(response.body);
+  }
+
+
+
+  static Future<String> getDeviceNick() async {
+    var deviceInfoPg = new DeviceInfoPlugin();
+    switch (Platform.operatingSystem) {
+      case "android":
+        return (await deviceInfoPg.androidInfo).model;
+      case "ios":
+        return (await deviceInfoPg.iosInfo).name;
+      default:
+        return "unknown";
+    }
+  }
+
+  Future<String?> getToken([bool requestPermission = true]) async {
+    if (requestPermission) {
+      var permReq = await firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true, provisional: true),
+      );
+      if (permReq == false) {
+        Fluttertoast.showToast(msg: "Unable to get permissions", backgroundColor: Colors.amber);
+        return null;
+      }
+    }
+    return await firebaseMessaging.getToken();
+  }
+
+  Future<StdResponse?> deviceRegistration({
+    bool? notify,
+    bool? locate,
+  }) async {
+    var nick = await getDeviceNick();
+    var fcmId = await getToken(notify ?? false);
+
+    Map<String, dynamic> req = {
+      'fcm_id': fcmId,
+      'nick': nick,
+      'type': DeviceType.current.toString(),
+      'notify': notify ?? prefs.deviceNotify,
+      'locate': locate ?? prefs.deviceLocate,
+    };
+
+    var strJson = jsonEncode(req);
+
+    var response = await this.http.post(
+      "${cfg.apiUrl}/user/devices",
+      body: strJson,
+    );
+    var stdResponse = StdResponse.fromJson(response.body)!;
+
+    deviceId = stdResponse.id! ;
+    // prefs.setDeviceId(stdResponse.id!);
+
+
+    // if (notify != null) prefs.setDeviceNotify(notify);
+
+
+    return stdResponse;
   }
 
   Future<Listing?> get(int? id) async {
@@ -164,4 +232,16 @@ class Listings extends ApiClientBase {
 
     return StdResponse.fromJson(response.body);
   }
+}
+
+class PreferenceUtils {
+  static Future<SharedPreferences> get _instance async => _prefsInstance ??= await SharedPreferences.getInstance();
+  static SharedPreferences? _prefsInstance;
+
+  // call this method from iniState() function of mainApp().
+  static Future<SharedPreferences> init() async {
+    _prefsInstance = await _instance;
+    return _prefsInstance!;
+  }
+
 }

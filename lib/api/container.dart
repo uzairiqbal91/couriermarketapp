@@ -12,6 +12,7 @@ final getIt = GetIt.instance;
 const ENV = "env";
 const HEADLESS = "headless";
 
+@pragma("vm:entry-point")
 Future<void> ensureDependencies([isHeadless = false]) async {
   if (getIt.isRegistered<String>(instanceName: ENV)) return;
   await configureDependencies(isHeadless);

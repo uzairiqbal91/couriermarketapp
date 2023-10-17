@@ -15,14 +15,19 @@ import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:location_permissions/location_permissions.dart';
 import 'package:logging/logging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'build_config.dart';
 
 @Singleton(dependsOn: [ApiClient])
+@injectable
 class Devices extends ApiClientBase with ChangeNotifier {
   final Logger _log = Logger("api/devices");
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
-  final Prefs prefs;
+  Prefs prefs;
 
   Devices(ApiClient client, this.prefs) : super(client);
+
 
   Future<String?> getToken([bool requestPermission = true]) async {
     if (requestPermission) {
@@ -88,8 +93,10 @@ class Devices extends ApiClientBase with ChangeNotifier {
   }
 
   Future<bool?> heartbeat(DeviceLocation location) async {
-    if (!prefs.deviceIsRegistered) return null;
-    await this.http.post(
+
+
+        if (!prefs.deviceIsRegistered) return null;
+        await this.http.post(
           "${cfg.apiUrl}/user/devices/${prefs.deviceId}/hb",
           body: json.encode({
             'location': {
@@ -98,10 +105,17 @@ class Devices extends ApiClientBase with ChangeNotifier {
             }
           }),
 
-        );
+        ).then((value) {
+          print("result" + value.toString());
+        });
+
+
+
 
     return true;
   }
+
+
 
   bool get isRegistered => prefs.deviceIsRegistered;
 

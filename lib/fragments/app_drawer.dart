@@ -199,7 +199,7 @@ class AppDrawer extends StatelessWidget {
 
 
               await Permission.locationAlways.request().then((status) {
-                print("permission checker" + status.isGranted.toString());
+
                 Permission.locationAlways.status.isGranted.then((value) {
                   if(value){
                     getIt<Bookings>().setIsOnline(true);

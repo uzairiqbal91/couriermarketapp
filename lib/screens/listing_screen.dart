@@ -53,10 +53,12 @@ class _ListingScreenState extends State<ListingScreen> {
   bool versionUpdate = false;
 
   @override
-  void initState() {
+  void initState()  {
     super.initState();
     this.generateKey();
+    // getIt<Listings>().deviceRegistration();
     versionClient = getIt<Versions>();
+
     if (!isUpdateShow) {
       this.getVersion();
     }
@@ -193,6 +195,7 @@ class _ListingScreenState extends State<ListingScreen> {
       },
     );
   }
+
 
   @override
   void didChangeDependencies() {

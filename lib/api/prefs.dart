@@ -1,6 +1,9 @@
 import 'package:courier_market_mobile/api/container.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+int? deviceId;
+
 class Prefs {
   String? env;
   late SharedPreferences prefs;
@@ -12,10 +15,12 @@ class Prefs {
   }
 
   static Future<Prefs> create() async {
-    var prefs = Prefs(getIt<String>(instanceName: 'env'));
+    var prefs =  Prefs(getIt<String>(instanceName: 'env'));
     await prefs.init();
     return prefs;
   }
+
+
 
   String _k(String tag) => '$env.$tag';
 
